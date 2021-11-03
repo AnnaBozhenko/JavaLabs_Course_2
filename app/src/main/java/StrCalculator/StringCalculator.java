@@ -12,9 +12,14 @@ public class StringCalculator {
                     sum += Integer.parseInt(numb);
                 }
             }
-            else if ((symbols[i] == ',' && !numb.equals(""))) {
-                sum += Integer.parseInt(numb);
-                numb = "";
+            else if ((symbols[i] == ',' || symbols[i] == '\n') && !numb.equals("")) {
+//                check if there is no following symbol (invalid format)
+//                check if the following symbol is not a repeated comma or newline char (invalid format)
+                if (i + 1 == symbols.length || (symbols[i + 1] == '\n' || symbols[i + 1] == ',')) break;
+                else {
+                    sum += Integer.parseInt(numb);
+                    numb = "";
+                }
             }
             else break;
         }

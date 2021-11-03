@@ -6,17 +6,54 @@ package StrCalculator;
 import org.junit.Test;
 
 public class MainTest {
+//    testing add-method
+    public int add(String numbersStr) {
+        int sum = 0;
+        String numb = "";
+        char[] symbols = numbersStr.toCharArray();
+        for (int i = 0; i < symbols.length; i++) {
+            if (symbols[i] >= '0' && symbols[i] <= '9') {
+                numb += symbols[i];
+                if (i + 1 == symbols.length) {
+                    sum += Integer.parseInt(numb);
+                }
+            }
+            else if ((symbols[i] == ',' || symbols[i] == '\n') && !numb.equals("")) {
+//                check if there is no following symbol (invalid format)
+//                check if the following symbol is not a repeated comma or newline char (invalid format)
+                if (i + 1 == symbols.length || (symbols[i + 1] == '\n' || symbols[i + 1] == ',')) break;
+                else {
+                    sum += Integer.parseInt(numb);
+                    numb = "";
+                }
+            }
+            else break;
+        }
+        return sum;
+    }
+
     @Test public void testStrCalculator() {
-        StringCalculatorTest test = new StringCalculatorTest();
         String a = "1";
         String b = "1,2";
         String c = "4,5,6";
         String d = "@59";
         String e = "";
-        System.out.println("\""+ a +"\"" + ": " + test.add(a));
-        System.out.println("\""+ b +"\"" + ": " + test.add(b));
-        System.out.println("\""+ c +"\"" + ": " + test.add(c));
-        System.out.println("\""+ d +"\"" + ": " + test.add(d));
-        System.out.println("\""+ e +"\"" + ": " + test.add(e));
+        String f = "9,4\n6";
+        String g = "2\n5\n5";
+        String h = "1,\n3";
+        String i = "3,\n";
+        String j = ",";
+        String k = "\n";
+        System.out.println("\""+ a +"\"" + ": " + add(a));
+        System.out.println("\""+ b +"\"" + ": " + add(b));
+        System.out.println("\""+ c +"\"" + ": " + add(c));
+        System.out.println("\""+ d +"\"" + ": " + add(d));
+        System.out.println("\""+ e +"\"" + ": " + add(e));
+        System.out.println("\""+ f +"\"" + ": " + add(f));
+        System.out.println("\""+ g +"\"" + ": " + add(g));
+        System.out.println("\""+ h +"\"" + ": " + add(h));
+        System.out.println("\""+ i +"\"" + ": " + add(i));
+        System.out.println("\""+ j +"\"" + ": " + add(j));
+        System.out.println("\""+ k +"\"" + ": " + add(k));
     }
 }
