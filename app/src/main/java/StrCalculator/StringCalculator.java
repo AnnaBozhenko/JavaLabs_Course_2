@@ -3,7 +3,6 @@ package StrCalculator;
 public class StringCalculator {
     public int add(String numbersStr) {
         int sum = 0;
-        byte numbOfSummarands = 0;
         String numb = "";
         char[] symbols = numbersStr.toCharArray();
         for (int i = 0; i < symbols.length; i++) {
@@ -16,10 +15,6 @@ public class StringCalculator {
             else if ((symbols[i] == ',' && !numb.equals(""))) {
                 sum += Integer.parseInt(numb);
                 numb = "";
-                numbOfSummarands++;
-                if (numbOfSummarands == 2) {
-                    break;
-                }
             }
             else break;
         }
