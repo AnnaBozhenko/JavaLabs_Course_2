@@ -1,27 +1,35 @@
-package StrCalculator;
+package  StrCalculator;
 
 public class StringCalculator {
+
     public int add(String numbersStr) {
+        StringBuilder num = new StringBuilder(numbersStr.length());
         int sum = 0;
-        String numb = "";
-        char[] symbols = numbersStr.toCharArray();
-        for (int i = 0; i < symbols.length; i++) {
-            if (symbols[i] >= '0' && symbols[i] <= '9') {
-                numb += symbols[i];
-                if (i + 1 == symbols.length) {
-                    sum += Integer.parseInt(numb);
+        char[] numbersArr = numbersStr.toCharArray();
+        if (numbersArr[0] == '/' && numbersArr[1] == '/' && numbersArr[3] == '\n') {
+            char delimiter = numbersArr[2];
+            for (int i = 4; i < numbersArr.length; i++) {
+                if (numbersArr[i] >= '0' && numbersArr[i] <= '9') {
+                    num.append(numbersArr[i]);
+                    if (i + 1 == numbersArr.length) {
+                        sum += Integer.parseInt(num.toString());
+                    }
                 }
-            }
-            else if ((symbols[i] == ',' || symbols[i] == '\n') && !numb.equals("")) {
-//                check if there is no following symbol (invalid format)
-//                check if the following symbol is not a repeated comma or newline char (invalid format)
-                if (i + 1 == symbols.length || (symbols[i + 1] == '\n' || symbols[i + 1] == ',')) break;
+                else if (numbersArr[i] == delimiter || numbersArr[i] == '\n' && num.capacity() != 0) {
+                    if (i + 1 == numbersArr.length || numbersArr[i + 1] == delimiter || numbersArr[i + 1] == '\n') {
+                        sum = 0;
+                        break;
+                    }
+                    else {
+                        sum += Integer.parseInt(num.toString());
+                        num.delete(0, num.capacity() - 1);
+                    }
+                }
                 else {
-                    sum += Integer.parseInt(numb);
-                    numb = "";
+                    sum = 0;
+                    break;
                 }
             }
-            else break;
         }
         return sum;
     }
