@@ -13,7 +13,7 @@ public class MainTest {
     private final String strToTest;
     public MainTest() {
         testable = new StringCalculatorTest();
-        strToTest = "//,\n-6";
+        strToTest = "//,\n8,-45,-90";
     }
 
 //    @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
