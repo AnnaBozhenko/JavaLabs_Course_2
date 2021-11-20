@@ -61,7 +61,7 @@ public class MainTest {
 
 
     @Test
-    @DisplayName("There exception didn't occur.")
+    @DisplayName("Test to verify if exception for passed negative numbers was thrown.")
     public void testException() {
         assertThrows(NegativesNotAllowedException.class, () -> testable.add(strToTest));
     }
