@@ -7,13 +7,18 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MainTest {
+    private final int expectedTimesCalled;
     private final StringCalculatorTest testable;
     private final String strToTest;
+
     public MainTest() {
         testable = new StringCalculatorTest();
         strToTest = "//,\n8,-45,-90";
+        expectedTimesCalled = 5;
     }
 
 //    @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
@@ -38,6 +43,23 @@ public class MainTest {
 //        );
 //    }
 //
+
+    @Test
+    @DisplayName("Testing of how many times add() was called.")
+    public void testGetCalledCount() {
+        try {
+            testable.add(strToTest);
+            testable.add(strToTest);
+            testable.add(strToTest);
+            testable.add(strToTest);
+            testable.add(strToTest);
+            assertThat(testable.GetCalledCount(), is(expectedTimesCalled));
+        } catch (NegativesNotAllowedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Test
     @DisplayName("There exception didn't occur.")
     public void testException() {
