@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class StringCalculatorTest {
 
-
     static int timesCalled;
     public StringCalculatorTest() {
         timesCalled = 0;
@@ -33,7 +32,7 @@ public class StringCalculatorTest {
                         } else if (Integer.parseInt(num.toString()) < 0) {
                             negativeNumbers.add(Integer.parseInt(num.toString()));
                         }
-                        sum += Integer.parseInt(num.toString());
+                        else if (Integer.parseInt(num.toString()) <= 1000) sum += Integer.parseInt(num.toString());
                         if (negativeNumbers.size() != 0) throw new NegativesNotAllowedException(String.format("negatives not allowed, passed numbers: %s", negativeNumbers));
                     }
                 } else if (numbersArr[i] == delimiter || numbersArr[i] == '\n' && !num.toString().equals("")) {
@@ -48,7 +47,7 @@ public class StringCalculatorTest {
                         } else if (Integer.parseInt(num.toString()) < 0) {
                             negativeNumbers.add(Integer.parseInt(num.toString()));
                         }
-                        else sum += Integer.parseInt(num.toString());
+                        else if (Integer.parseInt(num.toString()) <= 1000) sum += Integer.parseInt(num.toString());
                         num.delete(0, num.capacity() - 1);
                     }
                 } else {
