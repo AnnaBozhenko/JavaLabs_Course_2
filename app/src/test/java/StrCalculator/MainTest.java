@@ -20,11 +20,24 @@ public class MainTest {
         strToTest = "//,\n-8,-45,-90";
     }
 
-//    @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
-//    @MethodSource("strCalculatorTester")
-//    void testStrCalculator(String strNumbers, int expected) {
-//        assertEquals(expected, testable.add(strNumbers), 0f);
-//    }
+    private static Stream<Arguments> NumbersValidNumbersAreNotGreaterThanThousand() {
+        return Stream.of(
+                Arguments.of("//,\n1001", 0),
+                Arguments.of("//,\n1,20000", 1),
+                Arguments.of("//,\n4,1005,6", 10)
+        );
+    }
+
+
+    @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
+    @MethodSource("NumbersValidNumbersAreNotGreaterThanThousand")
+    void testStrCalculatorNumbersValidNumbersAreNotGreaterThanThousand(String strNumbers, int expected) {
+        try {
+            assertEquals(expected, testable.add(strNumbers), 0f);
+        } catch (NegativesNotAllowedException e) {
+            e.printStackTrace();
+        }
+    }
 
 //    private static Stream<Arguments> strCalculatorTester() {
 //        return Stream.of(
@@ -42,7 +55,19 @@ public class MainTest {
 //        );
 //    }
 //
+//
+//    @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
+//    @MethodSource("strCalculatorTester")
+//    void testStrCalculator(String strNumbers, int expected) {
+//        try {
+//            assertEquals(expected, testable.add(strNumbers), 0f);
+//        } catch (NegativesNotAllowedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
+
+    @Ignore
     @Test
     @DisplayName("Testing of how many times add() was called.")
     public void testGetCalledCount() {
@@ -60,6 +85,10 @@ public class MainTest {
             e.printStackTrace();
         }
     }
+
+
+
+
 
     @Ignore
     @Test
