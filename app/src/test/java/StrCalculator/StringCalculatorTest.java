@@ -4,6 +4,16 @@ import java.util.ArrayList;
 
 public class StringCalculatorTest {
 
+
+    static int timesCalled;
+    public StringCalculatorTest() {
+        timesCalled = 0;
+    }
+
+    public int GetCalledCount(){
+        return timesCalled;
+    }
+
     public int add(String numbersStr) throws NegativesNotAllowedException {
         int sum = 0;
 //        initiate a container for possible digits of a unique passed number
@@ -47,6 +57,7 @@ public class StringCalculatorTest {
                 }
             }
         }
+        timesCalled++;
         return sum;
     }
 }
