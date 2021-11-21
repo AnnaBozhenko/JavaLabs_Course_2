@@ -20,24 +20,46 @@ public class MainTest {
         strToTest = "//,\n-8,-45,-90";
     }
 
-    private static Stream<Arguments> NumbersValidNumbersAreNotGreaterThanThousand() {
+
+    private static Stream<Arguments> strCalculatorTesterAnySizeDelimiter() {
         return Stream.of(
-                Arguments.of("//,\n1001", 0),
-                Arguments.of("//,\n1,20000", 1),
-                Arguments.of("//,\n4,1005,6", 10)
+                Arguments.of("//[****]\n1", 1),
+                Arguments.of("//[^^^^^^^^^]\n1^^^^^^^^^2", 3),
+                Arguments.of("//[$]\n4$5$6", 15),
+                Arguments.of("//[!!]\n59!!2!!10005", 61),
+                Arguments.of("//[.]\n", 0)
         );
     }
 
-
     @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
-    @MethodSource("NumbersValidNumbersAreNotGreaterThanThousand")
-    void testStrCalculatorNumbersValidNumbersAreNotGreaterThanThousand(String strNumbers, int expected) {
+    @MethodSource("strCalculatorTesterAnySizeDelimiter")
+    void testStrCalculatorstrCalculatorTesterAnySizeDelimiter(String strNumbers, int expected) {
         try {
             assertEquals(expected, testable.add(strNumbers), 0f);
         } catch (NegativesNotAllowedException e) {
             e.printStackTrace();
         }
     }
+
+
+//    private static Stream<Arguments> NumbersValidNumbersAreNotGreaterThanThousand() {
+//        return Stream.of(
+//                Arguments.of("//,\n1001", 0),
+//                Arguments.of("//,\n1,20000", 1),
+//                Arguments.of("//,\n4,1005,6", 10)
+//        );
+//    }
+//
+//
+//    @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
+//    @MethodSource("NumbersValidNumbersAreNotGreaterThanThousand")
+//    void testStrCalculatorNumbersValidNumbersAreNotGreaterThanThousand(String strNumbers, int expected) {
+//        try {
+//            assertEquals(expected, testable.add(strNumbers), 0f);
+//        } catch (NegativesNotAllowedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 //    private static Stream<Arguments> strCalculatorTester() {
 //        return Stream.of(
