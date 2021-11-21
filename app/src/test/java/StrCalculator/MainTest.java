@@ -33,7 +33,7 @@ public class MainTest {
 
     @ParameterizedTest(name = "{index} => string = {0}, result = {1}")
     @MethodSource("strCalculatorTesterAnySizeDelimiter")
-    void testStrCalculatorstrCalculatorTesterAnySizeDelimiter(String strNumbers, int expected) {
+    void testStrCalculatorCalculatorTesterAnySizeDelimiter(String strNumbers, int expected) {
         try {
             assertEquals(expected, testable.add(strNumbers), 0f);
         } catch (NegativesNotAllowedException e) {
