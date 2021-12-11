@@ -93,6 +93,7 @@ public class StringCalculator {
 
 
     public int add(String sourceStr) throws NegativesNotAllowedException {
+        timesCalled++;
         int sum = 0;
         int border_i = borderIndex1(sourceStr);
         if (border_i == -1) return sum;
