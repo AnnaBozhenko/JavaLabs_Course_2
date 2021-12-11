@@ -3,6 +3,8 @@ package  StrCalculator;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringCalculatorTest {
 
@@ -11,119 +13,126 @@ public class StringCalculatorTest {
         timesCalled = 0;
     }
 
-    public int GetCalledCount(){
-        return timesCalled;
+
+    public int borderIndex(String source) {
+        /*source - string that is considered to divide;
+        * returns number of indices to come through to divide source on two parts:
+        1) delimiters' part according to plate: "//[...]...[...]/n"
+        * 2) countable part - the rest substring;
+        * if no  delimiter part was found, returns -1.*/
+        String delimPart = "(//\\[.*?]\n)+";
+        Pattern p = Pattern.compile(delimPart);
+        Matcher m = p.matcher(source);
+        String delimiters = "";
+        while (m.find()) {
+            delimiters = m.group();
+        }
+        if (delimiters.length() == 0) {
+            return -1;
+        } else return delimiters.length();
     }
 
-    public int add(String numbersStr) throws NegativesNotAllowedException {
 
-        int sum = 0;
-//        define delimiter
-
-        if (numbersStr.charAt(0) == '/' && numbersStr.charAt(1) == '/' && numbersStr.charAt(2) == '[') {
-            ArrayList<Integer> negativeNumbers = new ArrayList<>();
-            StringBuilder delimiter = new StringBuilder(0);
-            StringBuilder number = new StringBuilder();
-//            set index to 3 to iterate over given string because it has been already checked for first 3 characters
-            int index = 3;
-            short delim_numb = 0;
-            while (index < numbersStr.length() && numbersStr.charAt(index) != ']') {
-                delimiter.append(numbersStr.charAt(index++));
-                delim_numb++;
+    public int borderIndex1(String source) {
+        boolean openBracket = false;
+        for (int border_i = 2; border_i < source.length(); border_i++) {
+            if (openBracket) {
+                if (source.charAt(border_i) == ']') openBracket = false;
             }
-            if (index == numbersStr.length() && numbersStr.charAt(index - 1) != ']') sum = 0;
-            //case when there was no delimiter passed (no enclosing square brackets)
             else {
-//                last character was ']', so go further
-                index++;
-//                case if there were no delimiter passed
-                if (index < numbersStr.length() && numbersStr.charAt(index) != '\n') {
-                    sum = 0;
-                    return sum;
+                if (source.charAt(border_i) == '[') openBracket = true;
+                else if (source.charAt(border_i) == '\n') {
+                    return border_i + 1;
                 }
-                index++;
-                if (delimiter.capacity() == 0) {
-                    if (index < numbersStr.length() && numbersStr.charAt(index) == '-') number.append(numbersStr.charAt(index++));
-                    while(index < numbersStr.length()) {
-                        if (numbersStr.charAt(index) >= '0' && numbersStr.charAt(index) <= '9') number.append(numbersStr.charAt(index++));
-//                    sum-value will be as default, that is, 0
-                        else {
-                            sum = 0;
-                            return sum;
-                        }
-                    }
-                    if (!number.toString().equals("") && !number.toString().equals("-")) {
-                        if (Integer.parseInt(number.toString()) < 0) throw new NegativesNotAllowedException(String.format("negatives not allowed, passed negatives: [%d]", Integer.parseInt(number.toString())));
-                        else if (Integer.parseInt(number.toString()) <= 1000) sum = Integer.parseInt(number.toString());
-                    }
-                } else {
-                    while (index < numbersStr.length()) {
-                        if ((numbersStr.charAt(index) >= '0' && numbersStr.charAt(index) <= '9') || (numbersStr.charAt(index) == '-' && number.toString().equals(""))) {
-                            number.append(numbersStr.charAt(index));
-                            System.out.println(number);
-                            if (index + 1 == numbersStr.length()) {
-                                if (number.toString().equals("-")) {
-                                    sum = 0;
-                                    break;
-                                }
-                                if (Integer.parseInt(number.toString()) < 0) negativeNumbers.add(Integer.parseInt(number.toString()));
-                                else if (Integer.parseInt(number.toString()) <= 1000) sum += Integer.parseInt(number.toString());
-                                if (negativeNumbers.size() != 0) throw new NegativesNotAllowedException(String.format("negatives not allowed, passed negatives: %s", negativeNumbers));
-                            }
-                        } else if (!number.toString().equals("")) {
-                            if (numbersStr.charAt(index) == delimiter.toString().charAt(0)) {
-                                System.out.println("start point of delimiter");
-                                index++;
-//                                first character of delimiter was checked, so move forward to the second one
-                                for (int delimIndex = 1; delimIndex < delim_numb && index < numbersStr.length(); delimIndex++, index++) {
-                                    if (numbersStr.charAt(index) != delimiter.charAt(delimIndex)) {
-                                        sum = 0;
-                                        return sum;
-                                    }
-                                }
-                                System.out.println("delimiter passed successfully");
-                                if (index == numbersStr.length() || numbersStr.charAt(index) < '0' || numbersStr.charAt(index) > '9') {
-                                    System.out.println("here is a bug!");
-                                    sum = 0;
-                                    break;
-                                }
-                                index--;
-                                if (number.toString().equals("-")) {
-                                    sum = 0;
-                                    break;
-                                }
-                                if (Integer.parseInt(number.toString()) < 0) negativeNumbers.add(Integer.parseInt(number.toString()));
-                                else if (Integer.parseInt(number.toString()) <= 1000) sum += Integer.parseInt(number.toString());
-                                number.delete(0, number.capacity());
-                            } else  if (numbersStr.charAt(index) == '\n') {
-                                if (index + 1 == numbersStr.length() || numbersStr.charAt(index + 1) < '0' || numbersStr.charAt(index + 1) > '9') {
-                                    sum = 0;
-                                    break;
-                                }
-                                if (number.toString().equals("-")) {
-                                    sum = 0;
-                                    break;
-                                }
-                                if (Integer.parseInt(number.toString()) < 0) negativeNumbers.add(Integer.parseInt(number.toString()));
-                                else if (Integer.parseInt(number.toString()) <= 1000) sum += Integer.parseInt(number.toString());
-                                number.delete(0, number.capacity());
-                            }
-                            else {
-                                sum = 0;
-                                return sum;
-                            }
-                        }
-                        else {
-                            System.out.println("buuug");
-                            sum = 0;
-                            break;
-                        }
-                        index++;
-                    }
+                else return -1;
+            }
+        }
+        return -1;
+    }
+
+
+    public ArrayList<String> defineDelimiters(String source, int upperIndex) {
+        ArrayList<String> delimiters = new ArrayList<>();
+//        pass first two indices, as they are occupied by '/' char
+//        upperIndex places newline char, so do not include it into consideration
+        StringBuilder delim = new StringBuilder("");
+        for (int i = 2; i < upperIndex; i++) {
+            if (source.charAt(i) == '[') {
+                continue;
+            } else if (source.charAt(i) == ']') {
+                if (!delim.toString().equals("")) {
+                    delimiters.add(delim.toString());
+                    delim.delete(0, delim.capacity());
+                }
+            } else delim.append(source.charAt(i));
+        }
+//        add newline char to the delimiters array
+        delimiters.add(delim.toString());
+        return delimiters;
+    }
+
+
+    public int checkIfContainsDelimiter(ArrayList<String> delimiterArr, String strToCheck, int index_str) {
+        /*delimiterArr - array of strings, each string is a delimiter; strToCheck - analyzable string,
+         * which is checked, starting at given index - index_str, for containing one of the given delimiters.*/
+        String partOfStr;
+        for (String delimiter : delimiterArr) {
+            if (delimiter.length() <= strToCheck.length() - index_str) {
+                partOfStr = strToCheck.substring(index_str, index_str + delimiter.length());
+                if (delimiter.equals(partOfStr)) {
+                    return index_str + delimiter.length();
                 }
             }
         }
+        return -1;
+    }
+
+
+    public int add(String sourceStr) throws NegativesNotAllowedException {
         timesCalled++;
+        int sum = 0;
+        int border_i = borderIndex1(sourceStr);
+        if (border_i == -1) return sum;
+        ArrayList<String> delimiters = defineDelimiters(sourceStr, border_i);
+        StringBuilder number = new StringBuilder(0);
+        ArrayList<String> negatives = new ArrayList<>(0);
+        for (int i = border_i; i < sourceStr.length(); i++) {
+            if (sourceStr.charAt(i) >= '0' && sourceStr.charAt(i) <= '9' || (sourceStr.charAt(i) == '-' && number.toString().equals(""))) {
+                number.append(sourceStr.charAt(i));
+                if (i + 1 == sourceStr.length()) {
+                    if (number.toString().equals("-")) return 0;
+                    else {
+                        if (Integer.parseInt(number.toString()) < 0) negatives.add(number.toString());
+                        else if (Integer.parseInt(number.toString()) <= 1000) sum += Integer.parseInt(number.toString());
+                    }
+                    if (negatives.size() != 0)
+                        throw new NegativesNotAllowedException(String.format("Negatives not allowed, passed negatives: %s", negatives));
+                }
+            }
+            else if (!number.toString().equals("")) {
+                // check if next characters form delimiter
+                i = checkIfContainsDelimiter(delimiters, sourceStr, i);
+                if (i == -1) return 0;
+                else {
+//                check if there are no repeating delimiters
+                    if (i < sourceStr.length()) {
+                        if (sourceStr.charAt(i) >= '0' && sourceStr.charAt(i) <= '9' || sourceStr.charAt(i) == '-') {
+                            if (number.toString().equals("-")) return 0;
+                            else {
+                                if (Integer.parseInt(number.toString()) < 0) negatives.add(number.toString());
+                                else if (Integer.parseInt(number.toString()) <= 1000) sum += Integer.parseInt(number.toString());
+                                number.delete(0, number.capacity());
+                                i--;
+                            }
+                        }
+                        else return 0;
+                    }
+                    else return 0;
+                }
+            }
+            else return 0;
+        }
         return sum;
     }
+
 }
