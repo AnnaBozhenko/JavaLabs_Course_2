@@ -1,6 +1,5 @@
 package  StrCalculator;
 
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -13,38 +12,42 @@ public class StringCalculatorTest {
         timesCalled = 0;
     }
 
+    public int GetCalledCount() {
+        return timesCalled;
+    }
 
     public int borderIndex(String source) {
         /*source - string that is considered to divide;
         * returns number of indices to come through to divide source on two parts:
-        1) delimiters' part according to plate: "//[...]...[...]/n"
-        * 2) countable part - the rest substring;
+        1st) delimiters' part according to plate: "//[...]...[...]/n"
+        * 2nd) countable part - the rest substring;
         * if no  delimiter part was found, returns -1.*/
         String delimPart = "(//\\[.*?]\n)+";
         Pattern p = Pattern.compile(delimPart);
         Matcher m = p.matcher(source);
-        String delimiters = "";
-        while (m.find()) {
-            delimiters = m.group();
+        if (m.lookingAt()) {
+            return m.group().length();
         }
-        if (delimiters.length() == 0) {
+        else{
             return -1;
-        } else return delimiters.length();
+        }
     }
 
 
     public int borderIndex1(String source) {
-        boolean openBracket = false;
-        for (int border_i = 2; border_i < source.length(); border_i++) {
-            if (openBracket) {
-                if (source.charAt(border_i) == ']') openBracket = false;
-            }
-            else {
-                if (source.charAt(border_i) == '[') openBracket = true;
-                else if (source.charAt(border_i) == '\n') {
-                    return border_i + 1;
+        if (source.length() > 2 && source.charAt(0) == '/' && source.charAt(1) == '/') {
+            boolean openBracket = false;
+            for (int border_i = 2; border_i < source.length(); border_i++) {
+                if (openBracket) {
+                    if (source.charAt(border_i) == ']') openBracket = false;
                 }
-                else return -1;
+                else {
+                    if (source.charAt(border_i) == '[') openBracket = true;
+                    else if (source.charAt(border_i) == '\n') {
+                        return border_i + 1;
+                    }
+                    else return -1;
+                }
             }
         }
         return -1;
@@ -52,10 +55,10 @@ public class StringCalculatorTest {
 
 
     public ArrayList<String> defineDelimiters(String source, int upperIndex) {
+//        source - string; upperIndex - index number of source's element, upperIndex < source's length;
+//        returns array of delimiters passed to the source;
         ArrayList<String> delimiters = new ArrayList<>();
-//        pass first two indices, as they are occupied by '/' char
-//        upperIndex places newline char, so do not include it into consideration
-        StringBuilder delim = new StringBuilder("");
+        StringBuilder delim = new StringBuilder();
         for (int i = 2; i < upperIndex; i++) {
             if (source.charAt(i) == '[') {
                 continue;
@@ -64,17 +67,20 @@ public class StringCalculatorTest {
                     delimiters.add(delim.toString());
                     delim.delete(0, delim.capacity());
                 }
-            } else delim.append(source.charAt(i));
+            } else if (source.charAt(i) == '\n') {
+                delimiters.add("\n");
+            }
+            else delim.append(source.charAt(i));
         }
-//        add newline char to the delimiters array
-        delimiters.add(delim.toString());
         return delimiters;
     }
 
 
     public int checkIfContainsDelimiter(ArrayList<String> delimiterArr, String strToCheck, int index_str) {
         /*delimiterArr - array of strings, each string is a delimiter; strToCheck - analyzable string,
-         * which is checked, starting at given index - index_str, for containing one of the given delimiters.*/
+         * which is checked, starting at given index - index_str, for containing one of the given delimiters.
+         * if substring starting from given index equals to one of the delimiters, then return index
+         * of strToCheck, got after passing the delimiter.*/
         String partOfStr;
         for (String delimiter : delimiterArr) {
             if (delimiter.length() <= strToCheck.length() - index_str) {
@@ -92,6 +98,7 @@ public class StringCalculatorTest {
         timesCalled++;
         int sum = 0;
         int border_i = borderIndex1(sourceStr);
+//        if string doesn't satisfy pattern of delimiters passing
         if (border_i == -1) return sum;
         ArrayList<String> delimiters = defineDelimiters(sourceStr, border_i);
         StringBuilder number = new StringBuilder(0);
@@ -112,6 +119,7 @@ public class StringCalculatorTest {
             else if (!number.toString().equals("")) {
                 // check if next characters form delimiter
                 i = checkIfContainsDelimiter(delimiters, sourceStr, i);
+//                no delimiters pattern was found;
                 if (i == -1) return 0;
                 else {
 //                check if there are no repeating delimiters
@@ -122,6 +130,7 @@ public class StringCalculatorTest {
                                 if (Integer.parseInt(number.toString()) < 0) negatives.add(number.toString());
                                 else if (Integer.parseInt(number.toString()) <= 1000) sum += Integer.parseInt(number.toString());
                                 number.delete(0, number.capacity());
+//                                return to the previous position because in the loop 'i' will be increased
                                 i--;
                             }
                         }
