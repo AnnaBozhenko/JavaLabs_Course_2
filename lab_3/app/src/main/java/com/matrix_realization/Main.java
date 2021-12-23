@@ -32,8 +32,8 @@ public class Main {
 //        --------------------------------------------------
 //        Test for generation a square matrix
 //        --------------------------------------------------
-        ArrayList<ArrayList<Integer>> matrixSource = new ArrayList<>();
-        int numb = 0;
+        ArrayList<ArrayList<Float>> matrixSource = new ArrayList<>();
+        float numb = 0;
         for (int row = 0; row < 5; row++) {
             matrixSource.add(new ArrayList<>());
             for (int col = 0; col < 5; col++) {
@@ -89,5 +89,7 @@ public class Main {
 //        MatrixEnv b = new MatrixIm(matrixSource);
 //        ArrayList<ArrayList<Integer>> c = b.getMatrix();
 //        if (c != null) Matrix.printMatrix(c);
+//        --------------------------------------------------
+
     }
 }
